@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-q+4c^(-inb)4&swr6h=dy2j9_mx@42&swpldns_3x#v&qw5o==
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'api.data-sink.startinblox.com'
+]
 
 
 # Application definition
