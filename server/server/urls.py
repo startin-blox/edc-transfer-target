@@ -15,14 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from proxy.views import JSONToFile, FileToJSON
+from proxy.views import JSONToFile
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('json-to-file/<str:filename>/', JSONToFile.as_view(), name='json_to_file'),
-    path('file-to-json/<str:filename>/', FileToJSON.as_view(), name='file_to_json'),
+    path('sink/<str:filename>', JSONToFile.as_view(), name='sink'),
     path("schema/", SpectacularAPIView.as_view(api_version='v1'), name="schema"),
     path(
         "docs/",

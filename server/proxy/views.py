@@ -7,7 +7,7 @@ from django.conf import settings
 import os
 from django.views.decorators.csrf import csrf_exempt
 
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample, inline_serializer, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 
 from .models import StoredFile
 
@@ -27,8 +27,8 @@ class JSONToFile(APIView):
             )
         ],
         responses={
-        201: OpenApiResponse(description='File saved successfully'),
-        400: OpenApiResponse(description='Invalid input data.'),
+            201: OpenApiResponse(description='File saved successfully'),
+            400: OpenApiResponse(description='Invalid input data.'),
         }
     )
     def post(self, request, filename):
@@ -42,7 +42,7 @@ class JSONToFile(APIView):
                 json.dump(json_data, outfile)
             
             # Get URL of saved file
-            file_url = request.build_absolute_uri(reverse('file_to_json', args=[filename]))
+            file_url = request.build_absolute_uri(reverse('sink', args=[filename]))
 
             # Create a new instance of the StoredFile model
             stored_file = StoredFile()
@@ -62,9 +62,25 @@ class JSONToFile(APIView):
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-
-class FileToJSON(APIView):
-
+    @csrf_exempt
+    @extend_schema(
+        request=[],
+        parameters=[],
+        examples=[
+            OpenApiExample(
+                "JSONToFileExample",
+                value={
+                    'message': 'Hello, world!'
+                },
+                request_only=True,
+                response_only=False
+            )
+        ],
+        responses={
+        201: OpenApiResponse(description='File saved successfully'),
+        400: OpenApiResponse(description='Invalid input data.'),
+        }
+    )
     def get(self, request, filename):
         try:
             # Check if file exists
@@ -85,4 +101,4 @@ class FileToJSON(APIView):
             return Response(json_data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': str(e)}, status=status.HTTP_404_NOT_FOUND)
