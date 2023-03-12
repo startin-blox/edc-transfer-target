@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import StoredFile
 
-# Register your models here.
-admin.register(StoredFile)
+class StoredFileAdmin(admin.ModelAdmin):
+    fields = ['original_filename', 'path', 'url']
+
+admin.site.register(StoredFile, StoredFileAdmin)
