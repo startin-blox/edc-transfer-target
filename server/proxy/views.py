@@ -8,8 +8,16 @@ import os
 from django.views.decorators.csrf import csrf_exempt
 
 from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
+from rest_framework.parsers import BaseParser
 
 from .models import StoredFile
+
+
+class OctetParser(BaseParser):
+    media_type = 'application/octet-stream'
+
+    def parse(self, stream, media_type=None, parser_context=None):
+        return stream.read()
 
 class JSONToFile(APIView):
     authentication_classes = [] #disables authentication
