@@ -12,6 +12,9 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
 from .models import StoredFile
 
 class JSONToFile(APIView):
+    authentication_classes = [] #disables authentication
+    permission_classes = [] #disables permission
+
     @csrf_exempt
     @extend_schema(
         request=[],
@@ -40,7 +43,7 @@ class JSONToFile(APIView):
             filepath = os.path.join(settings.MEDIA_ROOT, filename)
             with open(filepath, 'w') as outfile:
                 json.dump(json_data, outfile)
-            
+
             # Get URL of saved file
             file_url = request.build_absolute_uri(reverse('sink', args=[filename]))
 
@@ -66,19 +69,9 @@ class JSONToFile(APIView):
     @extend_schema(
         request=[],
         parameters=[],
-        examples=[
-            OpenApiExample(
-                "JSONToFileExample",
-                value={
-                    'message': 'Hello, world!'
-                },
-                request_only=True,
-                response_only=False
-            )
-        ],
         responses={
-        201: OpenApiResponse(description='File saved successfully'),
-        400: OpenApiResponse(description='Invalid input data.'),
+            201: OpenApiResponse(description='File saved successfully'),
+            400: OpenApiResponse(description='Invalid input data.'),
         }
     )
     def get(self, request, filename):
